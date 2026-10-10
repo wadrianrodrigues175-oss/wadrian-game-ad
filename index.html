@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamer Booster - Wadrian</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #090a0f;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.5);
+        }
+        .neon-blue-border {
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            border: 1px solid rgba(0, 210, 255, 0.5);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+        }
+        .glow-blue-text {
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 flex flex-col justify-between">
+
+    <!-- Header / Identidade do Criador -->
+    <header class="p-4 bg-slate-900/80 backdrop-blur-md border-b border-emerald-500/30 sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i data-lucide="zap" class="text-emerald-400 w-6 h-6 animate-pulse"></i>
+            <div>
+                <h1 class="text-lg font-bold tracking-wider text-emerald-400 glow-text uppercase">Gamer Booster</h1>
+                <p class="text-xs text-slate-400">Criado por: <span class="text-white font-semibold underline decoration-emerald-500">Wadrian</span></p>
+            </div>
+        </div>
+        <span class="bg-emerald-950 text-emerald-400 border border-emerald-500/40 text-xs px-2.5 py-1 rounded-full font-mono">v2.0 PRO</span>
+    </header>
+
+    <main class="p-4 max-w-md mx-auto space-y-6 w-full">
+
+        <!-- Status do Dispositivo -->
+        <section class="grid grid-cols-3 gap-3">
+            <!-- RAM -->
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-center flex flex-col items-center">
+                <i data-lucide="cpu" class="text-emerald-400 w-5 h-5 mb-1"></i>
+                <span class="text-xs text-slate-400">Memória RAM</span>
+                <span id="ramText" class="text-lg font-extrabold text-emerald-400 mt-1">78%</span>
+                <span class="text-[10px] text-slate-500">2.2 GB / 4 GB</span>
+            </div>
+            <!-- CPU/Cooler -->
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-center flex flex-col items-center">
+                <i data-lucide="thermometer" class="text-cyan-400 w-5 h-5 mb-1"></i>
+                <span class="text-xs text-slate-400">Temperatura</span>
+                <span id="tempText" class="text-lg font-extrabold text-cyan-400 mt-1">42°C</span>
+                <span id="tempStatus" class="text-[10px] text-amber-400">Aquecido</span>
+            </div>
+            <!-- FPS -->
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-center flex flex-col items-center">
+                <i data-lucide="gamepad-2" class="text-purple-400 w-5 h-5 mb-1"></i>
+                <span class="text-xs text-slate-400">Modo Jogo</span>
+                <span id="fpsText" class="text-lg font-extrabold text-purple-400 mt-1">60 FPS</span>
+                <span class="text-[10px] text-emerald-400">Estável</span>
+            </div>
+        </section>
+
+        <!-- Botão Ação Principal (Super Boost) -->
+        <section class="bg-slate-900/90 p-6 rounded-2xl neon-border text-center space-y-4">
+            <h2 class="text-sm font-semibold text-slate-300 uppercase tracking-widest">Painel de Otimização Geral</h2>
+            
+            <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+                <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <circle class="text-slate-800" stroke-width="8" stroke="currentColor" fill="transparent" r="38" cx="50" cy="50" />
+                    <circle id="progressCircle" class="text-emerald-400 progress-ring-circle" stroke-width="8" stroke-dasharray="238.76" stroke-dashoffset="52" stroke-linecap="round" stroke="currentColor" fill="transparent" r="38" cx="50" cy="50" />
+                </svg>
+                <button id="boostBtn" onclick="executarSuperBoost()" class="absolute w-28 h-28 bg-gradient-to-tr from-emerald-600 to-teal-400 hover:from-emerald-500 hover:to-teal-300 rounded-full flex flex-col items-center justify-center font-bold text-slate-950 shadow-lg shadow-emerald-500/50 active:scale-95 transition-all">
+                    <i data-lucide="rocket" class="w-7 h-7 mb-0.5"></i>
+                    <span class="text-xs">TURBINAR</span>
+                </button>
+            </div>
+
+            <p id="statusMessage" class="text-xs text-slate-400 h-4">Aperte para liberar RAM e esfriar o sistema</p>
+        </section>
+
+        <!-- Ferramentas Rápidas (Cooler & Hibernador) -->
+        <section class="grid grid-cols-2 gap-3">
+            <!-- Esfriar Celular -->
+            <button onclick="esfriarCelular()" class="bg-slate-900/90 hover:bg-slate-800/80 p-4 rounded-xl border border-cyan-500/30 flex items-center space-x-3 text-left transition">
+                <div class="p-2 bg-cyan-950 rounded-lg text-cyan-400 border border-cyan-500/40">
+                    <i data-lucide="snowflake" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-200">Cooler CPU</h3>
+                    <p class="text-[10px] text-slate-400">Esfriar sistema</p>
+                </div>
+            </button>
+
+            <!-- Limpeza Pesada -->
+            <button onclick="limparRAM()" class="bg-slate-900/90 hover:bg-slate-800/80 p-4 rounded-xl border border-emerald-500/30 flex items-center space-x-3 text-left transition">
+                <div class="p-2 bg-emerald-950 rounded-lg text-emerald-400 border border-emerald-500/40">
+                    <i data-lucide="trash-2" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-200">Limpar RAM</h3>
+                    <p class="text-[10px] text-slate-400">Fechar processos</p>
+                </div>
+            </button>
+        </section>
+
+        <!-- Seção: Hibernador de Aplicativos em Segundo Plano -->
+        <section class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="moon" class="w-4 h-4 text-indigo-400"></i> Hibernador de Background
+                </h3>
+                <span class="text-[10px] bg-indigo-950 text-indigo-300 border border-indigo-800 px-2 py-0.5 rounded">Ativo</span>
+            </div>
+            
+            <p class="text-[11px] text-slate-400">Suspende redes sociais e apps pesados enquanto você joga:</p>
+
+            <div class="space-y-2 text-xs">
+                <!-- App 1 -->
+                <div class="flex justify-between items-center p-2 bg-slate-950 rounded border border-slate-800">
+                    <span class="text-slate-300">Instagram / TikTok</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+                <!-- App 2 -->
+                <div class="flex justify-between items-center p-2 bg-slate-950 rounded border border-slate-800">
+                    <span class="text-slate-300">WhatsApp / Telegram</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+                <!-- App 3 -->
+                <div class="flex justify-between items-center p-2 bg-slate-950 rounded border border-slate-800">
+                    <span class="text-slate-300">Navegadores e Outros</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Biblioteca de Jogos para Otimizar -->
+        <section class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="crosshair" class="w-4 h-4 text-emerald-400"></i> Jogos Otimizados
+            </h3>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+                <button onclick="otimizarJogo('Free Fire')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded border border-slate-800 flex items-center justify-between text-slate-300">
+                    <span>🔥 Free Fire</span>
+                    <span class="text-[10px] text-emerald-400">MAX FPS</span>
+                </button>
+                <button onclick="otimizarJogo('Roblox')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded border border-slate-800 flex items-center justify-between text-slate-300">
+                    <span>🧱 Roblox</span>
+                    <span class="text-[10px] text-emerald-400">MAX FPS</span>
+                </button>
+                <button onclick="otimizarJogo('Minecraft')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded border border-slate-800 flex items-center justify-between text-slate-300">
+                    <span>⛏️ Minecraft</span>
+                    <span class="text-[10px] text-emerald-400">MAX FPS</span>
+                </button>
+                <button onclick="otimizarJogo('PUBG')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded border border-slate-800 flex items-center justify-between text-slate-300">
+                    <span>🔫 PUBG Mobile</span>
+                    <span class="text-[10px] text-emerald-400">MAX FPS</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Console de Logs da Simulação -->
+        <section class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-400 space-y-1">
+            <div class="text-slate-500 font-bold border-b border-slate-800 pb-1">CONSOLE DE SISTEMA:</div>
+            <div id="consoleLogs" class="h-16 overflow-y-auto space-y-1 text-[10px]">
+                <p class="text-emerald-500">[SISTEMA] Gamer Booster pronto.</p>
+                <p class="text-slate-400">[INFO] Desenvolvido por Wadrian.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center text-[11px] text-slate-500 p-4 border-t border-slate-900">
+        <p>Projeto Escolar - Desenvolvido por <strong>Wadrian</strong></p>
+    </footer>
+
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
+
+        function addLog(mensagem, tipo = 'info') {
+            const consoleDiv = document.getElementById('consoleLogs');
+            const p = document.createElement('p');
+            
+            if(tipo === 'sucesso') p.className = 'text-emerald-400';
+            else if(tipo === 'cooler') p.className = 'text-cyan-400';
+            else p.className = 'text-slate-400';
+
+            p.innerText = `[${new Date().toLocaleTimeString().slice(0,5)}] ${mensagem}`;
+            consoleDiv.appendChild(p);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        function executarSuperBoost() {
+            const btn = document.getElementById('boostBtn');
+            const status = document.getElementById('statusMessage');
+            const ramText = document.getElementById('ramText');
+            const circle = document.getElementById('progressCircle');
+
+            btn.disabled = true;
+            status.innerText = "Hibernando apps e liberando memória...";
+            addLog("Iniciando Super Boost Geral...", "info");
+
+            // Animação da barra de progresso
+            circle.style.strokeDashoffset = "180";
+
+            setTimeout(() => {
+                addLog("Fechando processos em segundo plano...", "info");
+            }, 800);
+
+            setTimeout(() => {
+                addLog("Limpando cache temporário de jogos...", "info");
+            }, 1500);
+
+            setTimeout(() => {
+                ramText.innerText = "32%";
+                document.getElementById('tempText').innerText = "34°C";
+                document.getElementById('tempStatus').innerText = "Frio";
+                document.getElementById('tempStatus').className = "text-[10px] text-emerald-400";
+                
+                circle.style.strokeDashoffset = "80";
+                status.innerText = "✨ Sistema Otimizado com Sucesso!";
+                addLog("RAM reduzida para 32%. Jogos rodando liso!", "sucesso");
+                
+                btn.disabled = false;
+            }, 2300);
+        }
+
+        function esfriarCelular() {
+            addLog("Ativando Cooler CPU...", "cooler");
+            document.getElementById('tempText').innerText = "31°C";
+            document.getElementById('tempStatus').innerText = "Normal";
+            document.getElementById('tempStatus').className = "text-[10px] text-cyan-400";
+            alert("🧊 CPU Resfriada! A temperatura caiu para 31°C.");
+        }
+
+        function limparRAM() {
+            document.getElementById('ramText').innerText = "28%";
+            addLog("Limpeza profunda de RAM concluída.", "sucesso");
+            alert("🧹 Memória RAM limpa! 1.4 GB liberados para jogos.");
+        }
+
+        function otimizarJogo(nomeJogo) {
+            addLog(`Otimização e travamento de FPS aplicados no ${nomeJogo}.`, "sucesso");
+            alert(`🎮 ${nomeJogo} foi configurado no MODO ALTO DESEMPENHO por Wadrian!`);
+        }
+    </script>
+</body>
+</html>
